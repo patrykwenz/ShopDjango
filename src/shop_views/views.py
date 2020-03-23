@@ -5,7 +5,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home_view(request):
-    return render(request, "shop_views/base.html", {})
+    return render(request, "shop_views/home.html", {})
 
 
 def about_view(request):
