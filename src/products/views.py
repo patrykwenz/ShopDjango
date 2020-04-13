@@ -10,14 +10,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
+class AboutView(View):
+    model = Item
+    template_name = "products/home.html"
+
+
 class HomeView(ListView):
     model = Item
-    template_name = "shop_views/home.html"
+    template_name = "products/home.html"
 
 
 class ProductView(DetailView):
     model = Item
-    template_name = "shop_views/product.html"
+    template_name = "products/product.html"
 
 
 class OrderSummaryView(LoginRequiredMixin, View):
@@ -27,7 +32,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             context = {
                 'object': order
             }
-            return render(self.request, 'shop_views/summary.html', context)
+            return render(self.request, 'products/summary.html', context)
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
             return redirect("/")
@@ -49,18 +54,18 @@ def add_to_cart(request, pk):
             order_item.quantity += 1
             order_item.save()
             messages.info(request, "This item quantity was updated.")
-            return redirect("shop_views-summary")
+            return redirect("products:summary")
         else:
             order.items.add(order_item)
             messages.info(request, "This item was added to your cart.")
-            return redirect("shop_views-summary")
+            return redirect("products:summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
         messages.info(request, "This item was added to your cart.")
-        return redirect("shop_views-summary")
+        return redirect("products:summary")
 
 
 @login_required
@@ -82,13 +87,13 @@ def remove_from_cart(request, pk):
             order.items.remove(order_item)
             order_item.delete()
             messages.info(request, "This item was removed from your cart.")
-            return redirect("shop_views-summary")
+            return redirect("products:summary")
         else:
             messages.info(request, "This item was not in your cart")
-            return redirect("shop_views-product", pk=pk)
+            return redirect("products:product", pk=pk)
     else:
         messages.info(request, "You do not have an active order")
-        return redirect("shop_views-product", pk=pk)
+        return redirect("products:product", pk=pk)
 
 
 @login_required
@@ -113,10 +118,10 @@ def remove_single_item_from_cart(request, pk):
             else:
                 order.items.remove(order_item)
             messages.info(request, "This item quantity was updated.")
-            return redirect("shop_views-summary")
+            return redirect("products:summary")
         else:
             messages.info(request, "This item was not in your cart")
-            return redirect("shop_views-product", pk=pk)
+            return redirect("products:product", pk=pk)
     else:
         messages.info(request, "You do not have an active order")
-        return redirect("shop_views-product", pk=pk)
+        return redirect("products:product", pk=pk)

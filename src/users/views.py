@@ -12,7 +12,7 @@ def register(request):
             form.save()
             email = form.cleaned_data.get('email')
             messages.success(request, f'Account created for {email}!')
-            return redirect('shop_views-home')
+            return redirect('products:home')
     else:
         form = CustomUserCreationForm()
     return render(request, 'users/register.html', {'form': form})

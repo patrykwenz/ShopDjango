@@ -20,13 +20,13 @@ class Item(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('shop_views-product', args=[str(self.id)])
+        return reverse('products:product', args=[str(self.id)])
 
     def get_to_cart_url(self):
-        return reverse('shop_views-add-to-cart', args=[str(self.id)])
+        return reverse('products:add-to-cart', args=[str(self.id)])
 
     def get_remove_cart_url(self):
-        return reverse('shop_views-remove-from-cart', args=[str(self.id)])
+        return reverse('products:remove-from-cart', args=[str(self.id)])
 
 
 class OrderItem(models.Model):
